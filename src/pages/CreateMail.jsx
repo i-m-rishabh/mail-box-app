@@ -2,16 +2,40 @@ import React, { useState, useRef, useMemo } from 'react';
 import JoditEditor from 'jodit-react';
 
 const CreateMail = () => {
+    //change this when use redux
+    const senderEmail = 'sender@gmail.com';
     const emailRef = useRef(null);
     const editor = useRef(null);
     const [content, setContent] = useState('');
     const config = {
         placeholder: 'start typing...',
     }
+    async function handleStoreEmail(receiverEmail, text){
+        const email = {
+            from: senderEmail,
+            to: receiverEmail,
+            text: text,
+        }
+        const response = await fetch(`https://mail-box-react-app-default-rtdb.firebaseio.com/emails.json`,{
+            method: 'POST',
+            body: JSON.stringify(email),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        const data = await response.json();
+        if(response.ok){
+            alert('email send successfully');
+            //reset input values here
+        }else{
+            alert('Error: email send failed');
+        }
+    }
     function handleEmailSend(){
         const email = emailRef.current.value;
         const text = editor.current.value;
-        console.log([email,text]);
+        // console.log([email,text]);
+        handleStoreEmail(email, text);
     }
 
     return (
