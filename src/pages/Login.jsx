@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Signup = () => {
+const Login = () => {
     
 // AIzaSyB9m55G39buJUFJOZ8yb8lJGhbC_7hTtyg
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const navigate = useNavigate();
 
     function handleEmailChange(event){
         setErrorMessage('');
@@ -22,15 +22,10 @@ const Signup = () => {
         const newPassword = event.target.value;
         setPassword(newPassword);
     }
-    function handleConfirmPasswordChange(event){
-        setErrorMessage('');
-        setSuccessMessage('');
-        const newConfirmPassword = event.target.value;
-        setConfirmPassword(newConfirmPassword);
-    }
-    // functin to handle user signup
-    async function handleUserSignup(){
-        const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB9m55G39buJUFJOZ8yb8lJGhbC_7hTtyg',{
+
+    // functin to handle user login
+    async function handleUserLogin(){
+        const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB9m55G39buJUFJOZ8yb8lJGhbC_7hTtyg',{
             method:'POST',
             body: JSON.stringify({
                 email: email,
@@ -41,38 +36,39 @@ const Signup = () => {
                 'Content-Type': 'application/json'
             }
         });
+        const data = await response.json();
         if(response.ok){
-            setSuccessMessage('congratulations! you have successfully signed up. Now login to continue');
+            alert('logged in successfully');
+            console.log(data);
+            localStorage.setItem('idToken', data.idToken);
+            //redirect user to home page
+                navigate('/home');
             // resetting input fields
             setEmail('');
             setPassword('')
-            setConfirmPassword('');
         }else{
-            const data = await response.json();
+            alert('login failed');
+            console.log(data);
             setErrorMessage(data.error.message || 'error is not showing properly');
         }
 
     }
     // function to handle form submit
-    function handleSignup(event){
+    function handleLogin(event){
         event.preventDefault();
-        if(!email || !password || !confirmPassword){
+        if(!email || !password){
             setErrorMessage('ERROR! all fields are mendatory');
             return;
         }
-        if(password !== confirmPassword){
-            setErrorMessage('ERROR! password and confirm-password must be same');
-            return;
-        }
-        handleUserSignup();
+        handleUserLogin();
     }
     
     return(
         <div className=" flex flex-col justify-center items-center w-screen h-screen">
-            <div className=" max-w-md relative bg-primary py-10 px-10 rounded-xl flex flex-col justify-center items-center gap-5 text-white">
-                <h2 className=" text-xl mb-5 font-bold">SignUp</h2>
-                {/* signup form */}
-                <form className="flex flex-col gap-3" onSubmit={handleSignup}>
+            <div className=" max-w-lg relative bg-primary py-10 px-10 rounded-xl flex flex-col justify-center items-center gap-5 text-white">
+                <h2 className=" text-xl mb-5 font-bold">Login</h2>
+                {/* Login form */}
+                <form className="flex flex-col gap-3" onSubmit={handleLogin}>
                     <div className="flex justify-between gap-1">
                         <label htmlFor="email">Email</label>
                         <input type="email" name="email" id="email" onChange={handleEmailChange} value={email} className=" rounded text-black p-1" />
@@ -81,14 +77,11 @@ const Signup = () => {
                         <label htmlFor="password">Password</label>
                         <input type="password" name="password" id="password" onChange={handlePasswordChange} value={password} className=" rounded text-black p-1" />
                     </div>
-                    <div className="flex justify-between gap-1">
-                        <label htmlFor="confirm-password">Confirm Password</label>
-                        <input type="password" name="confirm-password" id="confirm-password" onChange={handleConfirmPasswordChange} value={confirmPassword} className=" rounded text-black p-1" />
-                    </div>
+                    
                     <div className="flex justify-center mt-10">
-                        <button type="submit" className=" bg-secondary py-1 px-2 rounded text-black hover:scale-105 font-semibold ">sign up</button>
+                        <button type="submit" className=" bg-secondary py-1 px-2 rounded text-black hover:scale-105 font-semibold ">login</button>
                     </div>
-                    <p className=" text-center">Already have an account <Link to={'/login'}><span className=" text-secondary">login</span></Link></p>
+                    <p className=" text-center">Don't have an account <Link to={'/signup'}><span className=" text-secondary">signup</span></Link></p>
                 </form>
                 {errorMessage && <p className=" text-red-300">{errorMessage}</p>}
                 {successMessage && <p className=" text-green-300">{successMessage}</p>}
@@ -97,4 +90,4 @@ const Signup = () => {
     )
 }
 
-export default Signup;
+export default Login;
