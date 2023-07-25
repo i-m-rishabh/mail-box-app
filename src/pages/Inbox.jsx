@@ -1,11 +1,27 @@
 import { useEffect, useState } from "react";
-
+import MailItem from "./MailItem";
+import { useDispatch, useSelector } from "react-redux";
+import { activeActions } from "../store/activeSlice";
+import { activeEmailInfoActions } from "../store/activeEmailInfoSlice";
 
 const Inbox  = () =>{
-    //change it when using redux
-    const userEmail = 'rishabh@gmail.com';
+    
+    const userEmail = useSelector(state => state.auth.email);
     const [inboxEmails, setInboxEmails] = useState([]);
-
+    const dispatch = useDispatch();
+    
+    useEffect(()=>{
+        const totalUnread = inboxEmails.reduce((acc,current)=>{
+            if(current.isRead === false){
+                return acc + 1;
+            }else{
+                return acc;
+            }
+        },0);
+        // console.log(totalUnread);
+        dispatch(activeActions.setTotalUnread(totalUnread));
+    },[inboxEmails]);
+    
     useEffect(()=>{
         handleFetchEmail();
     },[]);
@@ -16,28 +32,39 @@ const Inbox  = () =>{
             });
             const data = await response.json();
             if(response.ok){
-                alert('email fetched successfully');
-                const inbox = Object.values(data).filter((email)=>{
-                    return email.to === userEmail;
+                // alert('email fetched successfully');
+                if(data===null){
+                    return;
+                }
+                const allMails = Object.keys(data).map((key)=>{
+                    return {
+                        id: key,
+                        ...data[key],
+                    }
+                });
+                const inbox = allMails.filter((email)=>{
+                    return (email.to === userEmail && email.isDeleted=== false);
                 })
-                // console.log(inbox);
+                console.log(inbox);
                 setInboxEmails([...inbox]);
             }else{
                 alert('Error: email fetching failed');
             }
     }
-
+    function handleOpenEmail({id, from, subject, text, isRead, to}){
+        // console.log([id, from, subject, text]);
+        dispatch(activeActions.setActive('showEmail'));
+        dispatch(activeEmailInfoActions.setEmail({id,from,subject,text, isRead, to}));
+    }
     return (
-        <div>
-            <div>Inbox</div>
+        <div className="p-5">
+            <div className=" text-2xl text-secondary">Inbox</div>
             <div>
                 {
                     inboxEmails.map((email)=>{
-                        const {from, text} = email;
+                        const {id, from, subject, text, isRead, to} = email;
                         return (
-                            <div>
-                                <li>sender:{from}{"  "}message:{text}</li>
-                            </div>
+                            <MailItem id={id} from={from} subject={subject} text={text} isRead={isRead} key={id} to={to} onClick={handleOpenEmail}/>
                         )
                     })
                 }

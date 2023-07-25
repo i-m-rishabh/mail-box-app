@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import logo from '../assets/logo-mailbox.png'
+import { useDispatch } from "react-redux";
+import { authActions } from "../store/authSlice";
 
 const Login = () => {
     
@@ -9,6 +12,7 @@ const Login = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     function handleEmailChange(event){
         setErrorMessage('');
@@ -39,9 +43,14 @@ const Login = () => {
         const data = await response.json();
         if(response.ok){
             alert('logged in successfully');
-            console.log(data);
-            localStorage.setItem('idToken', data.idToken);
-            //redirect user to home page
+            dispatch(authActions.login({idToken:data.idToken,email: data.email, localId: data.localId}));
+            localStorage.setItem('data',JSON.stringify({
+                idToken:data.idToken,
+                email: data.email,
+                localId: data.localId,
+                isLoggedIn: true, 
+            }))
+            // console.log(data);
                 navigate('/home');
             // resetting input fields
             setEmail('');
@@ -64,8 +73,11 @@ const Login = () => {
     }
     
     return(
-        <div className=" flex flex-col justify-center items-center w-screen h-screen">
-            <div className=" max-w-lg relative bg-primary py-10 px-10 rounded-xl flex flex-col justify-center items-center gap-5 text-white">
+        <div className=" bg-primary flex flex-col justify-center items-center w-screen h-screen relative">
+        <div className=' w-40 md:h-40 absolute top-0 left-0'>
+          <img src={logo} alt='logo' className=' ' />
+        </div>
+            <div className=" max-w-lg relative bg-primary py-10 px-10 rounded-xl flex flex-col justify-center items-center gap-5 text-white shadow-lg border">
                 <h2 className=" text-xl mb-5 font-bold">Login</h2>
                 {/* Login form */}
                 <form className="flex flex-col gap-3" onSubmit={handleLogin}>
