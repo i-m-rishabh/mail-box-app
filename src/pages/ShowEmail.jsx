@@ -31,6 +31,7 @@ const ShowEmail = () => {
         <div className=" relative w-full h-full p-10">
             <div className=" text-2xl text-white mb-10">Email Message</div>
             <div className=" m-2 mt-10 text-white"><span className=''>From:</span> {from}</div>
+            <div className=" m-2 mt-10 text-white"><span className=''>To:</span> {to}</div>
             <div className="m-2 text-white">Subject: {subject}</div>
             <div className="m-2 text-white">Message: <div dangerouslySetInnerHTML={{ __html: text }} /></div>
         </div>

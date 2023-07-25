@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { redirect, useNavigate } from "react-router-dom";
 import mailsSlice, { mailsSliceActions } from "../store/mailsSlice";
 
-const MailItem = ({id, from, subject, text, isRead, to, onClick}) => {
+const MailItem = ({id, from, subject, text, isRead, to, onClick, mode}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     function handleClick(){
@@ -31,10 +31,10 @@ const MailItem = ({id, from, subject, text, isRead, to, onClick}) => {
     }
     return(
         <div className=" flex gap-5 border rounded-full py-1 px-2 m-3 hover:border-secondary hover:scale-y-110 hover:scale-x-105 relative" onClick={handleClick}>
-            {!isRead && <div className=" w-2 h-2 bg-blue-800 rounded-full absolute top-3.5 left-1"></div>}
+            {!isRead && mode!=='sentBox' && <div className=" w-2 h-2 bg-blue-800 rounded-full absolute top-3.5 left-1"></div>}
             <div className=" text-white ml-3">{from}</div>
             <div className=" text-secondary">{subject}</div>
-            <button className="ml-auto text-sm  rounded-full bg-red-600 text-white px-2 hover:bg-white hover:text-red-600" onClick={handleDeleteMail}>delete</button>
+            {mode!=='sentBox' && <button className="ml-auto text-sm  rounded-full bg-red-600 text-white px-2 hover:bg-white hover:text-red-600" onClick={handleDeleteMail}>delete</button>}
         </div>
     )
 }

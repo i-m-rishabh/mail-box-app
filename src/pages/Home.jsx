@@ -6,11 +6,14 @@ import Inbox from './Inbox';
 import { useDispatch, useSelector } from 'react-redux';
 import { activeActions } from '../store/activeSlice';
 import ShowEmail from './ShowEmail';
+import SentBox from './SentBox';
 const Home = () => {
     const active = useSelector(state => state.active.active);
     const totalUnread = useSelector(state => state.active.totalUnread);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const userEmail = useSelector(state => state.auth.email);
+
     function handleLogout(){
         dispatch(authActions.logout());
         localStorage.removeItem('data');
@@ -20,7 +23,10 @@ const Home = () => {
         <div className='w-screen h-screen bg-primary relative overflow-hidden'>
             <div className='px-5 h-20 flex justify-between '>
                 <img src={logo} alt='logo' className=' ' />
+                <div className=' flex flex-col justify-center items-center gap-2'>
                 <button className='border rounded-lg text-secondary border-secondary hover:scale-105 py-1 px-2 w-20 h-10 mt-5' onClick={handleLogout}>logout</button>
+                <p className='text-yellow-500'>{userEmail}</p>
+                </div>
             </div>
             <div className=' mt-5 flex relative'>
                 <div className=' text-white flex h-screen bg-gray-800 flex-col w-1/5 rounded-tr-lg'>
@@ -38,6 +44,7 @@ const Home = () => {
                 <div className='relative border rounded-lg w-full'>
                     { active==='compose' && <CreateMail />}
                     { active==='inbox' && <Inbox />}
+                    { active==='sent' && <SentBox />}
                     { active==='showEmail' && <ShowEmail />}
                 </div>
             </div>

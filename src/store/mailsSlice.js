@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     inboxMails: [],
+    sentBoxMails: [],
 }
 const mailsSlice = createSlice({
     name:'mailsSlice',
@@ -14,6 +15,9 @@ const mailsSlice = createSlice({
           state.inboxMails = state.inboxMails.filter((mail)=>{
             return mail.id!==action.payload;
           })  
+        },
+        setSentBoxMails(state, action){
+            state.sentBoxMails = action.payload;
         }
     }
 })
