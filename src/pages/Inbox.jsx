@@ -3,11 +3,13 @@ import MailItem from "./MailItem";
 import { useDispatch, useSelector } from "react-redux";
 import { activeActions } from "../store/activeSlice";
 import { activeEmailInfoActions } from "../store/activeEmailInfoSlice";
+import { mailsSliceActions } from "../store/mailsSlice";
 
 const Inbox  = () =>{
     
     const userEmail = useSelector(state => state.auth.email);
-    const [inboxEmails, setInboxEmails] = useState([]);
+    // const [inboxEmails, setInboxEmails] = useState([]);
+    const inboxEmails = useSelector(state => state.mails.inboxMails);
     const dispatch = useDispatch();
     
     useEffect(()=>{
@@ -45,8 +47,9 @@ const Inbox  = () =>{
                 const inbox = allMails.filter((email)=>{
                     return (email.to === userEmail && email.isDeleted=== false);
                 })
-                console.log(inbox);
-                setInboxEmails([...inbox]);
+                // console.log(inbox);
+                // setInboxEmails([...inbox]);
+                dispatch(mailsSliceActions.setInboxMails([...inbox]));
             }else{
                 alert('Error: email fetching failed');
             }

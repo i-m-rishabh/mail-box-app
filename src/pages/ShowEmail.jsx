@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { json } from "react-router-dom";
 
 
 const ShowEmail = () => {
     const activeMailInfo = useSelector(state => state.activeEmailInfo);
     const {id, from, subject, text, isRead, to} = activeMailInfo;
+
     useEffect(()=>{
         if(isRead){
             return;
@@ -32,7 +32,7 @@ const ShowEmail = () => {
             <div className=" text-2xl text-white mb-10">Email Message</div>
             <div className=" m-2 mt-10 text-white"><span className=''>From:</span> {from}</div>
             <div className="m-2 text-white">Subject: {subject}</div>
-            <div className="m-2 text-white">Message: {text}</div>
+            <div className="m-2 text-white">Message: <div dangerouslySetInnerHTML={{ __html: text }} /></div>
         </div>
     )
 }
