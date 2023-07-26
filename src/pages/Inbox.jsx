@@ -6,6 +6,7 @@ import { activeEmailInfoActions } from "../store/activeEmailInfoSlice";
 import { mailsSliceActions } from "../store/mailsSlice";
 
 const Inbox  = () =>{
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
     
     const userEmail = useSelector(state => state.auth.email);
     // const [inboxEmails, setInboxEmails] = useState([]);
@@ -25,8 +26,16 @@ const Inbox  = () =>{
     },[inboxEmails]);
     
     useEffect(()=>{
-        handleFetchEmail();
-    },[]);
+        // console.log('fetching email');
+        // handleFetchEmail();
+            const intervalId = setInterval(()=>{
+                console.log('fetching new mails');
+                handleFetchEmail();
+            },3000);
+        return ()=>{
+            clearInterval(intervalId);
+        }
+    },[handleFetchEmail]);
 
     async function handleFetchEmail(){
         const response = await fetch(`https://mail-box-react-app-default-rtdb.firebaseio.com/emails.json`,{

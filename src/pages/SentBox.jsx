@@ -11,18 +11,6 @@ const SentBox  = () =>{
     const sentBoxEmails = useSelector(state => state.mails.sentBoxMails);
     const dispatch = useDispatch();
     
-    // useEffect(()=>{
-    //     const totalUnread = sentBoxEmails.reduce((acc,current)=>{
-    //         if(current.isRead === false){
-    //             return acc + 1;
-    //         }else{
-    //             return acc;
-    //         }
-    //     },0);
-    //     // console.log(totalUnread);
-    //     dispatch(activeActions.setTotalUnread(totalUnread));
-    // },[sentBoxEmails]);
-    
     useEffect(()=>{
         handleFetchEmail();
     },[]);

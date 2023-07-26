@@ -8,6 +8,8 @@ import { activeActions } from '../store/activeSlice';
 import ShowEmail from './ShowEmail';
 import SentBox from './SentBox';
 const Home = () => {
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
     const active = useSelector(state => state.active.active);
     const totalUnread = useSelector(state => state.active.totalUnread);
     const dispatch = useDispatch();
@@ -42,10 +44,10 @@ const Home = () => {
                     </ul>
                 </div>
                 <div className='relative border rounded-lg w-full'>
-                    { active==='compose' && <CreateMail />}
-                    { active==='inbox' && <Inbox />}
-                    { active==='sent' && <SentBox />}
-                    { active==='showEmail' && <ShowEmail />}
+                    { active==='compose' && isLoggedIn && <CreateMail />}
+                    { active==='inbox' && isLoggedIn && <Inbox />}
+                    { active==='sent' && isLoggedIn && <SentBox />}
+                    { active==='showEmail' && isLoggedIn && <ShowEmail />}
                 </div>
             </div>
         </div>
