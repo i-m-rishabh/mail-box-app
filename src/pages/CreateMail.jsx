@@ -46,8 +46,8 @@ const CreateMail = () => {
     }
 
     return (
-        <div className='relative'>
-            <div className='p-10'>
+        <div className='relative w-full h-5/6 overflow-auto'>
+            <div className=' absolute p-10 overflow-auto'>
                 <div>
                     <h1 className=' text-2xl'>Compose new email</h1>
                 </div>

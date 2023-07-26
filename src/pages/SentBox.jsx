@@ -44,14 +44,14 @@ const SentBox  = () =>{
         dispatch(activeEmailInfoActions.setEmail({id,from,subject,text,to, isRead:true}));
     }
     return (
-        <div className="p-5">
+        <div className="p-5 h-full w-full relative">
             <div className=" text-2xl text-secondary">sentBox</div>
-            <div>
+            <div className=" absolute w-full p-10 h-4/5 overflow-auto">
                 {
                     sentBoxEmails.map((email)=>{
                         const {id, from, subject, text, isRead, to} = email;
                         return (
-                            <MailItem id={id} from={from} subject={subject} text={text} isRead={isRead} key={id} to={to} onClick={handleOpenEmail} mode={'sentBox'}/>
+                            <MailItem id={id} from={to} subject={subject} text={text} isRead={isRead} key={id} to={from} onClick={handleOpenEmail} mode={'sentBox'}/>
                         )
                     })
                 }

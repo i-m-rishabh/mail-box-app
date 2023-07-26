@@ -69,9 +69,9 @@ const Inbox  = () =>{
         dispatch(activeEmailInfoActions.setEmail({id,from,subject,text, isRead, to}));
     }
     return (
-        <div className="p-5">
+        <div className="p-5 h-full w-full relative">
             <div className=" text-2xl text-secondary">Inbox</div>
-            <div>
+            <div className=" absolute w-full p-10 h-4/5 overflow-auto">
                 {
                     inboxEmails.map((email)=>{
                         const {id, from, subject, text, isRead, to} = email;
