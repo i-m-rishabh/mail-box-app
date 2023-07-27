@@ -11,6 +11,7 @@ const Signup = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [loading , setLoading] = useState(false);
 
     function handleEmailChange(event) {
         setErrorMessage('');
@@ -32,6 +33,7 @@ const Signup = () => {
     }
     // functin to handle user signup
     async function handleUserSignup() {
+        setLoading(true);
         const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB9m55G39buJUFJOZ8yb8lJGhbC_7hTtyg', {
             method: 'POST',
             body: JSON.stringify({
@@ -53,7 +55,7 @@ const Signup = () => {
             const data = await response.json();
             setErrorMessage(data.error.message || 'error is not showing properly');
         }
-
+        setLoading(false);
     }
     // function to handle form submit
     function handleSignup(event) {
@@ -91,7 +93,7 @@ const Signup = () => {
                         <input type="password" name="confirm-password" id="confirm-password" onChange={handleConfirmPasswordChange} value={confirmPassword} className=" rounded text-black p-1" />
                     </div>
                     <div className="flex justify-center mt-10">
-                        <button type="submit" className=" bg-secondary py-1 px-2 rounded text-black hover:scale-105 font-semibold ">sign up</button>
+                        <button type="submit" className=" bg-secondary py-1 px-2 rounded text-black hover:scale-105 font-semibold ">{loading?'loading...':'sign up'}</button>
                     </div>
                     <p className=" text-center">Already have an account <Link to={'/login'}><span className=" text-secondary">login</span></Link></p>
                 </form>

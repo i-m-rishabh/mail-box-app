@@ -10,6 +10,8 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -28,7 +30,9 @@ const Login = () => {
 
     // functin to handle user login
     async function handleUserLogin(){
-        const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB9m55G39buJUFJOZ8yb8lJGhbC_7hTtyg',{
+        setLoading(true);
+        try{
+            const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB9m55G39buJUFJOZ8yb8lJGhbC_7hTtyg',{
             method:'POST',
             body: JSON.stringify({
                 email: email,
@@ -41,7 +45,7 @@ const Login = () => {
         });
         const data = await response.json();
         if(response.ok){
-            alert('logged in successfully');
+            // alert('logged in successfully');
             dispatch(authActions.login({idToken:data.idToken,email: data.email, localId: data.localId}));
             localStorage.setItem('data',JSON.stringify({
                 idToken:data.idToken,
@@ -55,11 +59,15 @@ const Login = () => {
             setEmail('');
             setPassword('')
         }else{
-            alert('login failed');
+            // alert('login failed');
             console.log(data);
             setErrorMessage(data.error.message || 'error is not showing properly');
         }
-
+        }catch(err){
+            setErrorMessage(err.message);
+        }finally{
+            setLoading(false);
+        }
     }
     // function to handle form submit
     function handleLogin(event){
@@ -90,7 +98,7 @@ const Login = () => {
                     </div>
                     
                     <div className="flex justify-center mt-10">
-                        <button type="submit" className=" bg-secondary py-1 px-2 rounded text-black hover:scale-105 font-semibold ">login</button>
+                        <button type="submit" className=" bg-secondary py-1 px-2 rounded text-black hover:scale-105 font-semibold ">{loading?'loading...':'login'}</button>
                     </div>
                     <p className=" text-center">Don't have an account <Link to={'/signup'}><span className=" text-secondary">signup</span></Link></p>
                 </form>

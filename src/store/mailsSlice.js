@@ -18,6 +18,10 @@ const mailsSlice = createSlice({
         },
         setSentBoxMails(state, action){
             state.sentBoxMails = action.payload;
+        },
+        clearMails(state, action){
+            state.inboxMails = [];
+            state.sentBoxMails = [];
         }
     }
 })

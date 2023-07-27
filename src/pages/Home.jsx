@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { activeActions } from '../store/activeSlice';
 import ShowEmail from './ShowEmail';
 import SentBox from './SentBox';
+import { mailsSliceActions } from '../store/mailsSlice';
 const Home = () => {
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
@@ -18,6 +19,7 @@ const Home = () => {
 
     function handleLogout(){
         dispatch(authActions.logout());
+        dispatch(mailsSliceActions.clearMails());
         localStorage.removeItem('data');
         navigate('/login');
     }
@@ -31,16 +33,16 @@ const Home = () => {
                 </div>
             </div>
             <div className=' mt-5 flex relative'>
-                <div className=' text-white flex h-screen bg-gray-800 flex-col w-1/5 rounded-tr-lg'>
-                    <ul className='px-3 py-2'>
-                        <li className={` border hover:scale-110 hover:border-secondary text-xl ${active==='compose' && "border-secondary"} mb-10 rounded-lg text-center py-1 px-2 m-2`}
+                <div className=' text-white flex h-screen bg-gray-800 flex-col w-1/5 rounded-tr-lg '>
+                    <ul className=' px-1 sm:px-3 py-2 '>
+                        <li className={` border hover:scale-110 hover:border-secondary text-sm sm:text-xl ${active==='compose' && "border-secondary"} mb-10 rounded-lg sm:text-center py-1 sm:px-2 sm:m-2`}
                         onClick={()=>dispatch(activeActions.setActive('compose'))}>Compose</li>
-                        <li className={`hover:scale-110 hover:border-secondary border rounded-lg text-center py-1 m-5 ${active==='inbox' && "border-secondary"}`} onClick={()=>dispatch(activeActions.setActive('inbox'))}>Inbox <span className=' text-sm bg-blue-600 rounded-lg ml-1 p-0.5'>{totalUnread}</span></li>
-                        <li className={`hover:scale-110 hover:border-secondary border rounded-lg text-center py-1 m-5 ${active==='sent' && "border-secondary"}`} onClick={()=>dispatch(activeActions.setActive('sent'))}>Sent</li>
-                        <li className='hover:scale-110 hover:border-secondary border rounded-lg text-center py-1 m-5'>Drafts</li>
-                        <li className='hover:scale-110 hover:border-secondary border rounded-lg text-center py-1 m-5'>Unread</li>
-                        <li className='hover:scale-110 hover:border-secondary border rounded-lg text-center py-1 m-5'>Starred</li>
-                        <li className='hover:scale-110 hover:border-secondary border rounded-lg text-center py-1 m-5'>Spam</li>
+                        <li className={`hover:scale-110 hover:border-secondary border rounded-lg text-center py-1 my-3 sm:m-5 sm:text-sm ${active==='inbox' && "border-secondary"}`} onClick={()=>dispatch(activeActions.setActive('inbox'))}>Inbox <span className=' text-sm bg-blue-600 rounded-lg ml-1 p-0.5'>{totalUnread}</span></li>
+                        <li className={`hover:scale-110 hover:border-secondary border rounded-lg text-center py-1 my-3 sm:m-5 sm:text-sm ${active==='sent' && "border-secondary"}`} onClick={()=>dispatch(activeActions.setActive('sent'))}>Sent</li>
+                        <li className='hover:scale-110 hover:border-secondary border rounded-lg text-center py-1 my-3 sm:m-5'>Drafts</li>
+                        <li className='hover:scale-110 hover:border-secondary border rounded-lg text-center py-1 my-3 sm:m-5'>Unread</li>
+                        <li className='hover:scale-110 hover:border-secondary border rounded-lg text-center py-1 my-3 sm:m-5'>Starred</li>
+                        <li className='hover:scale-110 hover:border-secondary border rounded-lg text-center py-1 my-3 sm:m-5'>Spam</li>
                     </ul>
                 </div>
                 <div className='relative border rounded-lg w-full'>

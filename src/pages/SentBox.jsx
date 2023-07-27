@@ -9,6 +9,7 @@ const SentBox  = () =>{
     
     const userEmail = useSelector(state => state.auth.email);
     const sentBoxEmails = useSelector(state => state.mails.sentBoxMails);
+    const [loading, setLoading] = useState(true);
     const dispatch = useDispatch();
     
     useEffect(()=>{
@@ -19,6 +20,7 @@ const SentBox  = () =>{
         const response = await fetch(`https://mail-box-react-app-default-rtdb.firebaseio.com/emails.json`,{
                 method: 'GET',
             });
+            setLoading(false);
             const data = await response.json();
             if(response.ok){
                 // alert('email fetched successfully');
@@ -45,6 +47,7 @@ const SentBox  = () =>{
     }
     return (
         <div className="p-5 h-full w-full relative">
+            {loading && <div> loading mails... </div>}
             <div className=" text-2xl text-secondary">sentBox</div>
             <div className=" absolute w-full p-10 h-4/5 overflow-auto">
                 {

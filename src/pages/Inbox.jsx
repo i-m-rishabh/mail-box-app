@@ -5,83 +5,86 @@ import { activeActions } from "../store/activeSlice";
 import { activeEmailInfoActions } from "../store/activeEmailInfoSlice";
 import { mailsSliceActions } from "../store/mailsSlice";
 
-const Inbox  = () =>{
+const Inbox = () => {
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
-    
     const userEmail = useSelector(state => state.auth.email);
     // const [inboxEmails, setInboxEmails] = useState([]);
     const inboxEmails = useSelector(state => state.mails.inboxMails);
+    const [loading, setLoading] = useState(true);
     const dispatch = useDispatch();
-    
-    useEffect(()=>{
-        const totalUnread = inboxEmails.reduce((acc,current)=>{
-            if(current.isRead === false){
+
+    useEffect(() => {
+        const totalUnread = inboxEmails.reduce((acc, current) => {
+            if (current.isRead === false) {
                 return acc + 1;
-            }else{
+            } else {
                 return acc;
             }
-        },0);
+        }, 0);
         // console.log(totalUnread);
         dispatch(activeActions.setTotalUnread(totalUnread));
-    },[inboxEmails]);
-    
-    useEffect(()=>{
+    }, [inboxEmails]);
+
+    useEffect(() => {
         // console.log('fetching email');
         // handleFetchEmail();
-            const intervalId = setInterval(()=>{
-                console.log('fetching new mails');
-                handleFetchEmail();
-            },3000);
-        return ()=>{
+        const intervalId = setInterval(() => {
+            console.log('fetching new mails');
+            handleFetchEmail();
+        }, 3000);
+        return () => {
             clearInterval(intervalId);
         }
-    },[handleFetchEmail]);
+    }, [handleFetchEmail]);
 
-    async function handleFetchEmail(){
-        const response = await fetch(`https://mail-box-react-app-default-rtdb.firebaseio.com/emails.json`,{
-                method: 'GET',
-            });
-            const data = await response.json();
-            if(response.ok){
-                // alert('email fetched successfully');
-                if(data===null){
-                    return;
-                }
-                const allMails = Object.keys(data).map((key)=>{
-                    return {
-                        id: key,
-                        ...data[key],
-                    }
-                });
-                const inbox = allMails.filter((email)=>{
-                    return (email.to === userEmail && email.isDeleted=== false);
-                })
-                // console.log(inbox);
-                // setInboxEmails([...inbox]);
-                dispatch(mailsSliceActions.setInboxMails([...inbox]));
-            }else{
-                alert('Error: email fetching failed');
+    async function handleFetchEmail() {
+        const response = await fetch(`https://mail-box-react-app-default-rtdb.firebaseio.com/emails.json`, {
+            method: 'GET',
+        });
+        setLoading(false);
+        const data = await response.json();
+        if (response.ok) {
+            // alert('email fetched successfully');
+            if (data === null) {
+                return;
             }
+            const allMails = Object.keys(data).map((key) => {
+                return {
+                    id: key,
+                    ...data[key],
+                }
+            });
+            const inbox = allMails.filter((email) => {
+                return (email.to === userEmail && email.isDeleted === false);
+            })
+            // console.log(inbox);
+            // setInboxEmails([...inbox]);
+            dispatch(mailsSliceActions.setInboxMails([...inbox]));
+        } else {
+            alert('Error: email fetching failed');
+        }
     }
-    function handleOpenEmail({id, from, subject, text, isRead, to}){
+    function handleOpenEmail({ id, from, subject, text, isRead, to }) {
         // console.log([id, from, subject, text]);
         dispatch(activeActions.setActive('showEmail'));
-        dispatch(activeEmailInfoActions.setEmail({id,from,subject,text, isRead, to}));
+        dispatch(activeEmailInfoActions.setEmail({ id, from, subject, text, isRead, to }));
     }
     return (
         <div className="p-5 h-full w-full relative">
+            {loading && <div>Loading mails...</div>}
             <div className=" text-2xl text-secondary">Inbox</div>
             <div className=" absolute w-full p-10 h-4/5 overflow-auto">
                 {
-                    inboxEmails.map((email)=>{
-                        const {id, from, subject, text, isRead, to} = email;
+                    inboxEmails.map((email) => {
+                        const { id, from, subject, text, isRead, to } = email;
                         return (
-                            <MailItem id={id} from={from} subject={subject} text={text} isRead={isRead} key={id} to={to} onClick={handleOpenEmail}/>
+                            <MailItem id={id} from={from} subject={subject} text={text} isRead={isRead} key={id} to={to} onClick={handleOpenEmail} />
                         )
                     })
                 }
+
             </div>
-        </div>        
+        </div>
     )
 }
 
