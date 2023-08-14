@@ -49,7 +49,7 @@ const SentBox  = () =>{
         <div className="p-5 h-full w-full relative">
             {loading && <div> loading mails... </div>}
             <div className=" text-2xl text-secondary">sentBox</div>
-            <div className=" absolute w-full p-10 h-4/5 overflow-auto">
+            <div className=" absolute w-full p-2 sm:p-10 h-4/5 overflow-auto">
                 {
                     sentBoxEmails.map((email)=>{
                         const {id, from, subject, text, isRead, to} = email;

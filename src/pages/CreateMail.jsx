@@ -3,7 +3,6 @@ import JoditEditor from 'jodit-react';
 import { useSelector } from 'react-redux';
 
 const CreateMail = () => {
-    //change this when use redux
     const senderEmail = useSelector((state)=>state.auth.email);
     const emailRef = useRef(null);
     const subjectRef = useRef(null);
@@ -37,6 +36,7 @@ const CreateMail = () => {
             alert('Error: email send failed');
         }
     }
+    
     function handleEmailSend(){
         const email = emailRef.current.value;
         const subject = subjectRef.current.value;
